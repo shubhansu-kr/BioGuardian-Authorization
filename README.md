@@ -1,131 +1,156 @@
-# MERN Authentication Template (JWT)
+# Bio Guardian App
 
-This is a starter template for a MERN stack application using JSON Web Tokens (JWT). The backend is built with [TypeScript](https://www.typescriptlang.org/), [Express](https://expressjs.com), [MongoDB](https://www.mongodb.com) and [Resend](https://resend.com) (for sending emails). There is also a Postman collection for testing the API. JWTs are stored in secure, HTTP-only cookies. The frontend is built with [React](https://react.dev), [Chakra UI](https://chakra-ui.com) and [React Query](https://tanstack.com/query/latest).
+The **Bio Guardian App** is an Android application built with Kotlin and Jetpack Compose. It follows a modular architecture and leverages modern Android development practices, including Material Design 3, Hilt for dependency injection, and Gradle for build management. This README is designed to be fully integrated in your IDE for a smooth development experience.
 
-Includes:
+## Table of Contents
 
-- register, login, logout, profile, account verification, password reset
-- send emails for account verification and password reset
-- get and remove sessions
-- frontend forms for login, register, reset password, etc.
-- custom react hooks to manage auth state & application data
+- [Overview](#overview)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [How to Build and Run](#how-to-build-and-run)
+- [Key Components](#key-components)
+  - [Fonts](#fonts)
+  - [Permissions](#permissions)
+  - [Dependency Injection](#dependency-injection)
+  - [ProGuard](#proguard)
+- [Testing](#testing)
+- [Dependency Management](#dependency-management)
+- [Team Members](#team-members)
+- [License](#license)
+- [Contributing](#contributing)
+- [Issues](#issues)
+- [🛠️ Build](#-build)
 
-<img src="preview.jpg" />
+---
 
-## API Architecture
+## Overview
 
-The API is built using different layers: routes, controllers, services and models.
+The **Bio Guardian App** combines modern UI development techniques with a robust Android architecture. It is carefully designed to be scalable, maintainable, and efficient, making use of industry-standard development practices.
 
-- Routes are responsible for handling the incoming requests and forwarding them to the appropriate controller.
-- Controllers are responsible for validating the request, calling the appropriate service, and sending back the response.
-- Services are responsible for handling the business logic. They interact with the database and any external services. Services may also call other services.
-- Models are responsible for interacting with the database. They contain the schema and any model utility methods.
+## Features
 
-\*\*\* For simple GET or DELETE requests that don't require any business logic, the controller may directly interact with the model.
+- **Jetpack Compose**: Implements a modern declarative UI approach.
+- **Material Design 3**: Ensures a cohesive, intuitive, and visually appealing design.
+- **Dependency Injection (Hilt)**: Supports clean architecture and ease of testing.
+- **Custom Fonts**: Integrates Montserrat and Roboto fonts to enhance readability.
+- **Permissions Management**: Handles essential permissions like CAMERA and STORAGE.
+- **ProGuard**: Configured for release builds to optimize and secure the app.
 
-#### Error Handling
+## Project Structure
 
-Errors are handled using a custom error handler middleware. The error handler middleware catches all errors that occur in the application and processes them accordingly. Each controller needs to be wrapped with the `errorCatch()` utility function to ensure that any errors that are thrown within the controller are caught and passed on to the error handler middleware.
-
-## Authentication Flow
-
-When a user logs in, the server will generate two JWTs: `AccessToken` and `RefreshToken`. Both JWTs are sent back to the client in secure, HTTP-only cookies. The AccessToken is short-lived (15 minutes) and is passed on EVERY request to authenticate the user. The RefreshToken is long-lived (30 days) and is ONLY sent to the `/refresh` endpoint. This endpoint is used to generate a new AccessToken, which will then be passed on subsequent requests.
-
-The frontend has logic that checks for `401 AccessTokenExpired` errors. When this error occurs, the frontend will send a request to the `/refresh` endpoint to get a new AccessToken. If that returns a 200 (meaning a new AccessToken was issued), then the client will retry the original request. This gives the user a seamless experience without having to log in again. If the `/refresh` endpoint errors, the user will be logged out and redirected to the login page.
-
-<img src="./jwt-auth-flow.jpg" />
-
-## Run Locally
-
-To get started, you need to have [Node.js](https://nodejs.org/en) installed. You also need to have MongoDB installed locally ([download here](https://www.mongodb.com/docs/manual/installation/)), or you can use a cloud service like [MongoDB Atlas](https://www.mongodb.com/atlas/database). You will also need to create a [Resend](https://resend.com) account to send emails.
-
-Clone the project
-
-```bash
-git clone https://github.com/shubhansu-kr/BioGuardian-Authorization.git
+```plaintext
+.
+├── .idea/                   # IDE-specific configuration files
+├── app/                     # Main Android application module
+│   ├── build.gradle.kts     # Gradle build script for the app module
+│   ├── proguard-rules.pro   # ProGuard rules for release builds
+│   └── src/                 # Source code for the app module
+│       ├── androidTest/     # Instrumented tests
+│       ├── main/            # Main application code
+│       └── test/            # Unit tests
+├── gradle/                  # Gradle wrapper and dependency versions
+│   ├── libs.versions.toml   # Centralized dependency version management
+│   └── wrapper/             # Gradle wrapper files
+├── build.gradle.kts         # Root Gradle build script
+├── gradle.properties        # Gradle configuration properties
+├── settings.gradle.kts      # Gradle settings file
+├── Readme.md                # Project documentation
 ```
 
-Go to the project directory
+## Prerequisites
+- *Android Studio*: Latest stable version
+- *JDK*: Version 17 or higher
+- *Gradle*: Managed via the Gradle wrapper included in the repository
 
+## How to Build and Run
+1. Clone the repository:
+   ```sh
+   git clone <repository-url>
+   cd Bio-Guardian-App
+   ```
+   
+2. Open the project in Android Studio.
+3. Sync the Gradle files when prompted.
+4. Run the application on an emulator or a physical device.
+
+## From the Command Line
+Alternatively, you can build the project using Gradle:
 ```bash
-cd mern-auth-jwt
+./gradlew assembleDebug
 ```
 
-Navigate to the backend directory
+## Key Components
+This section provides details on the main components of the project:
 
+### Fonts
+Custom fonts are defined in Type.kt:
+- Montserrat: Available in Medium, SemiBold, and Bold weights.
+- Roboto: Available in Regular weight.
+
+Usage: The fonts are applied throughout the application to maintain visual consistency.
+
+## Permissions
+The application requests the following permissions as defined in AndroidManifest.xml:
+- **INTERNET**
+- **READ_EXTERNAL_STORAGE**
+- **WRITE_EXTERNAL_STORAGE**
+- **CAMERA**
+
+Usage: These permissions enable features such as photo capture and accessing device storage.
+
+## Dependency Injection
+The app utilizes Hilt for dependency injection:
+- Annotate the application class with @HiltAndroidApp.
+- Define necessary modules to provide required dependencies.
+
+Usage: Hilt simplifies dependency management and testing throughout the app.
+
+## ProGuard
+ProGuard configuration is provided in proguard-rules.pro:
+- Optimizes bytecode.
+- Obfuscates the code to protect against reverse-engineering.
+
+Usage: Ensure ProGuard runs during release builds to improve performance and security.
+
+## Testing
+- **Unit Tests**: Located in app/src/test/java/.
+- **Instrumented Tests**: Located in app/src/androidTest/java/.
+
+## Run tests using the following Gradle commands:
 ```bash
-cd backend
+./gradlew test          # Run unit tests
+./gradlew connectedTest # Run instrumented tests
 ```
 
-Use the right node version (using [nvm](https://github.com/nvm-sh/nvm))
+## Dependency Management
+Dependencies are maintained centrally using the libs.versions.toml file located in the gradle/ directory, ensuring consistency across the project.
 
-```bash
-nvm use
-```
+## Team Members
+- Shubhansu Kumar Singh - 12104991
+- Satyam Thakur - 12114830
+- Rishabh Deo Singh - 12116007
+- Joshita Pachar - 12116639
 
-Install Backend dependencies
+## License
+This project is licensed under the MIT License. Please update this section if a different license applies.
 
-```bash
-npm install
-```
+## Contributing
+We welcome contributions! To contribute:
+1. **Fork the repository**.
+2. **Create a new branch** for your feature or bugfix.
+3. **Submit a pull request** with a detailed description of your changes.
 
-Before running the server, you need to add your ENV variables. Create a `.env` file and use the `sample.env` file as a reference.
-For development, you can set the `EMAIL_SENDER` to a random string, since the emails are sent with a resend sandbox account (when running locally).
-
-```bash
-cp sample.env .env
-# open .env and add your variables
-```
-
-Start the MongoDB server (if running locally)
-
-```bash
-# using homebrew
-brew services start mongodb-community@7.0
-```
-
-Start the API server
-
-```bash
-# runs on http://localhost:4004 (default)
-npm run dev
-```
-
-Navigate to the frontend directory & install dependencies
-
-```bash
-cd ../frontend
-npm install
-```
-
-Create a `.env` file at the root and add the `VITE_API_URL`. This is the URL of the backend API.
-
-```bash
-VITE_API_URL=http://localhost:4004
-```
-
-Start the dev server
-
-```bash
-# runs on http://localhost:5173
-  npm run dev
-```
-
-### Postman Collection
-
-There is a Postman collection in the `backend` directory that you can use to test the API. The `postman.json` contains requests for all the routes in the API. You can [import the JSON directly](https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-data/#import-postman-data) into Postman.
+## Issues
+If you encounter any issues, please report them in the Issues section of this repository.
 
 ## 🛠️ Build
-
-To build either the frontend or backend, run the following command in the respective directory:
-
+To build the project, use the following command in the project root directory:
+``` bash
+./gradlew assembleDebug
+```
+Alternatively, if you need to build specific modules (like the frontend or backend), navigate to the corresponding directory and run:
 ```bash
 npm run build
 ```
 
-To test the compiled API code, run:
-
-```bash
-# this runs the compiled code in the dist directory
-npm run start
-```
