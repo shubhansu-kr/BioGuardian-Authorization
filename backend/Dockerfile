@@ -1,9 +1,9 @@
 # Development stage
-FROM node:18-bookworm-slim as development
+FROM node:22 as development
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm ci
 
@@ -14,11 +14,11 @@ RUN npm run build
 CMD ["npm", "run", "dev"]
 
 # Production stage
-FROM node:18-bookworm-slim as production
+FROM node:22 as production
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm ci --only=production
 

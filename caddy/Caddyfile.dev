@@ -3,7 +3,6 @@
 }
 
 auth.localhost {
-    encode gzip
     reverse_proxy frontend:5173
 }
 
